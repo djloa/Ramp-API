@@ -18,6 +18,10 @@
   "homepage": "https://github.com/djloa/Ramp-API#readme",
   "dependencies": {
     "@hapi/hapi": "^21.0.0",
-    "mongoose": "^6.7.2"
+    "@web3auth/base": "^3.0.4",
+    "ethereumjs-common": "^1.5.2",
+    "ethereumjs-tx": "^2.1.2",
+    "mongoose": "^6.7.2",
+    "web3": "^1.8.1"
   }
 }
