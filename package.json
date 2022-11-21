@@ -22,6 +22,7 @@
     "ethereumjs-common": "^1.5.2",
     "ethereumjs-tx": "^2.1.2",
     "mongoose": "^6.7.2",
-    "web3": "^1.8.1"
+    "web3": "^1.8.1",
+    "web3modal": "^1.9.9"
   }
 }
