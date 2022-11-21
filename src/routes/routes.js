@@ -8,6 +8,28 @@ const Tx = require('ethereumjs-tx')
 require('dotenv').config()
 var web3;
 
+
+const axios = require('axios');
+
+async function getQuotes(asset, amount) {
+    let response = null;
+    try {
+        response = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=' + asset, {
+        });
+    } catch (ex) {
+        response = null;
+        // error
+        throw ex;
+    }
+    if (response) {
+        // success
+        const usdRate = response.data.data.rates.USD;
+        console.log(usdRate)
+        return amount / usdRate;
+    }
+}
+
+
 //eth
 async function main(address, amount) {
     // Configuring the connection to an Ethereum node
@@ -180,16 +202,37 @@ module.exports = [{
 },
 {
     method: 'GET',
-    path: '/findOrders',
+    path: '/quotes',
     handler: async (request, h) => {
+        const params = request.query
+
         try {
-            const result = await RampOrder.find({});
-            return h.response(result).code(200)
+            const value = await getQuotes(request.query.currency, request.query.amount);
+            const data = {
+                params: params,
+                value: value
+            }
+            return h.response(data).code(200);
         } catch (error) {
-            console.log(error)
+            console.log(error);
             return h.response(error).code(500);
         }
 
     }
-},
+}, {
+    method: 'GET',
+    path: '/admin/analytics',
+    handler: async (request, h) => {
+        let docs = await RampOrder.aggregate([
+            { $addFields: { PreviousDate: { $subtract: [new Date(), (1000 * 60 * 60 * 24 * 30)] } } },
+            { $group: { _id:  {wallet : "$wallet" , currencyName: "$currencyName"}, "totalAmount": { "$sum": "$amount" }, count: { $sum: { $cond: [{ $gte: ["$date", "$PreviousDate"] }, 1, 0] } } } },
+            { "$sort": { "_id.wallet": 1, "count": -1 } },
+            { $limit: 1 }
+        ])
+        console.log(JSON.stringify(docs))
+        return h.response(docs).code(200);
+
+
+    }
+}
 ];
