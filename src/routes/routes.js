@@ -5,19 +5,21 @@
 const Web3 = require("web3");
 const Common = require('ethereumjs-common');
 const Tx = require('ethereumjs-tx')
+require('dotenv').config()
+var web3;
 
 //eth
 async function main(address, amount) {
     // Configuring the connection to an Ethereum node
     const network = 'goerli'
-    const web3 = new Web3(
+    web3 = new Web3(
         new Web3.providers.HttpProvider(
             `https://${network}.infura.io/v3/25fbdd86af9246749c3613fb239f6c8f`
         )
     );
     // Creating a signing account from a private key
     const signer = web3.eth.accounts.privateKeyToAccount(
-        'e8eb5efec013e3ca5839ee408a8dd86f6d034fd6acc34b46082f483f6f68f989'
+        process.env.SENDER_PRIVATE_KEY
     );
     web3.eth.accounts.wallet.add(signer);
 
@@ -63,7 +65,7 @@ async function main(address, amount) {
 //BNB
 async function main2(address, amount) {
     const abiJson = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "decimals", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "amount", "type": "uint256" }], "name": "withdrawEther", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_value", "type": "uint256" }], "name": "burn", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_value", "type": "uint256" }], "name": "unfreeze", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "symbol", "outputs": [{ "name": "", "type": "string" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }], "name": "freezeOf", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "type": "function" }, { "constant": false, "inputs": [{ "name": "_value", "type": "uint256" }], "name": "freeze", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }, { "name": "", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "type": "function" }, { "inputs": [{ "name": "initialSupply", "type": "uint256" }, { "name": "tokenName", "type": "string" }, { "name": "decimalUnits", "type": "uint8" }, { "name": "tokenSymbol", "type": "string" }], "payable": false, "type": "constructor" }, { "payable": true, "type": "fallback" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": true, "name": "to", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Transfer", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Burn", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Freeze", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Unfreeze", "type": "event" }];
-    const web3 = (new Web3(new Web3.providers.HttpProvider(`https://data-seed-prebsc-1-s3.binance.org:8545`)))
+    web3 = (new Web3(new Web3.providers.HttpProvider(`https://data-seed-prebsc-1-s3.binance.org:8545`)))
 
     const busd = "0x242a1ff6ee06f2131b7924cacb74c7f9e3a5edc9";
 
@@ -137,9 +139,20 @@ module.exports = [{
     method: 'POST',
     path: '/fulfill-order',
     handler: async (request, h) => {
+        let receipt;
         try {
-           
-            const receipt = await main(request.payload.walletAddress, request.payload.cryptoUnitCount);
+
+            switch (request.payload.cryptoCurrencyName) {
+                case 'ETH':
+                    receipt = await main(request.payload.walletAddress, request.payload.cryptoUnitCount);
+                    break;
+                case 'BNB':
+                    receipt = await main2(request.payload.walletAddress, request.payload.cryptoUnitCount);
+                    break;
+                default:
+                    return h.response("Currency not supported, please try ETH or BNB").code(404);
+            }
+
             const rampOrder = new RampOrder({
                 date: Date.now(),
                 amount: request.payload.cryptoUnitCount,
@@ -154,7 +167,7 @@ module.exports = [{
                 message: rampSaved,
                 data: {
                     hash: receipt.transactionHash,
-                    gas: receipt.gasUsed
+                    gas: web3.utils.fromWei(receipt.gasUsed.toString())
                 }
             }
             return h.response(result).code(200)
