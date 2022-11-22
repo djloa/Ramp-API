@@ -209,7 +209,8 @@ module.exports = [{
         try {
             const value = await getQuotes(request.query.currency, request.query.amount);
             const data = {
-                params: params,
+                currency: params.currency,
+                amount: params.amount,
                 value: value
             }
             return h.response(data).code(200);
