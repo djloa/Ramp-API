@@ -8,7 +8,7 @@ const Routes = require('./src/routes/routes');
 const init = async () => {
     const server = Hapi.Server({
         host: 'localhost',
-        port: 1234
+        port: 3000
     });
 
     server.route(Routes);
