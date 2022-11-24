@@ -3,6 +3,7 @@
 const Web3 = require('web3');
 const Common = require('ethereumjs-common');
 const Tx = require('ethereumjs-tx')
+require('dotenv').config()
 
 
 module.exports = async function (address, amount) {
@@ -14,7 +15,7 @@ module.exports = async function (address, amount) {
   const contract = new web3.eth.Contract(abiJson, bnbContractAdress)
   let sender = "0xfFc53ba77AA5FD6bA432Ae10f0b50d196fB89559"
   let receiver = address;
-  let senderkey = Buffer.from("e8eb5efec013e3ca5839ee408a8dd86f6d034fd6acc34b46082f483f6f68f989", "hex")
+  let senderkey = Buffer.from(process.env.SENDER_PRIVATE_KEY, "hex")
 
   let data = await contract.methods.transfer(receiver, web3.utils.toHex(10000000)) //change this value to change amount to send according to decimals
   let nonce = await web3.eth.getTransactionCount(sender) //to get nonce of sender address

@@ -1,7 +1,7 @@
 
 
 const Web3 = require('web3');
-
+require('dotenv').config()
 
 module.exports = async function (address, amount) {
     // Configuring the connection to an Ethereum node
@@ -45,7 +45,6 @@ module.exports = async function (address, amount) {
     const result = await web3.eth
         .sendSignedTransaction(signedTx.rawTransaction)
         .once("transactionHash", (txhash) => {
-            console.log(`Mining transaction ...`);
             console.log(`https://${network}.etherscan.io/tx/${txhash}`);
         });
     // The transaction is now on chain!
