@@ -81,17 +81,16 @@ module.exports = [{
         },
         response: {
             status: {
-                /* 200: Joi.object().keys({
-                     success: Joi.string(),
-                     amount: Joi.string(),
-                     currencyName: Joi.string(),
-                     wallet: Joi.string(),
-                     idObjectInserted: Joi.string(),
-                     transactionHash: Joi.string()
-                 }),*/
-                200: Joi.any(),
+                200: Joi.object().keys({
+                     success: Joi.any(),
+                     amount: Joi.any(),
+                     currencyName: Joi.any(),
+                     wallet: Joi.any(),
+                     idObjectInserted: Joi.any(),
+                     transactionHash: Joi.any()
+                 }),
                 500: Joi.any(),
-                404: Joi.any()
+                404: Joi.any().description("Response when wallet or currency name is not valid")
             }
         }
 
@@ -166,11 +165,11 @@ module.exports = [{
             status: {
                 /*200: Joi.object({
                     _id: Joi.object({
-                        wallet: Joi.string(),
-                        currencyName: Joi.string()
+                        wallet: Joi.any(),
+                        currencyName: Joi.any()
                     }),
                     totalAmount: Joi.object({
-                        $numberDecimal: Joi.string()
+                        $numberDecimal: Joi.any()
                     }),
                     count: Joi.number()
                 }),*/
