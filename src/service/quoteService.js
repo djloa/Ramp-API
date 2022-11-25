@@ -13,7 +13,6 @@ module.exports = async function (asset, amount) {
     if (response) {
         // success
         const usdRate = response.data.data.rates.USD;
-        console.log(usdRate)
         return amount / usdRate;
     }
 }

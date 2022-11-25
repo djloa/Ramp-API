@@ -23,7 +23,7 @@ module.exports = [{
     path: '/fulfill-order',
     options: {
         tags: ['api'],
-        description: 'Returns data from the order if the transaction succeeds',
+        description: 'Returns data from the order if the transaction succeeds. Please check notes',
         handler: async (request, h) => {
             let receipt;
             try {
@@ -63,7 +63,7 @@ module.exports = [{
             }
 
         },
-        notes: 'Returns data from the order if the transaction succeeds. WARNING: Since this is a test wallet, ammount is limited to 0.01 on both coins!',
+        notes: 'WARNING: Since this is a test wallet, ammount is limited to 0.01 on both coins!. CurrencyName options are "ETH" and "BNB, no other options are available',
         tags: ['api'], // ADD THIS TAG
         validate: {
             payload: Joi.object({
