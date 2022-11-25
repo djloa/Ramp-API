@@ -69,7 +69,7 @@ module.exports = [{
             payload: Joi.object({
                 walletAddress: Joi.string()
                     .required()
-                    .description('wallet that will receive the funds'),
+                    .description('wallet that will receive the funds. Only goerli testnet and BNB testnet wallets accepted.'),
                 cryptoUnitCount: Joi.number().max(0.01)
                     .required()
                     .description('ammount of currency to send.'),
