@@ -11,6 +11,8 @@ module.exports = async function (address, amount) {
             `https://${network}.infura.io/v3/25fbdd86af9246749c3613fb239f6c8f`
         )
     );
+    //wallet validation
+    if (!web3.utils.isAddress(address)) return false;
     // Creating a signing account from a private key
     const signer = web3.eth.accounts.privateKeyToAccount(
         process.env.SENDER_PRIVATE_KEY

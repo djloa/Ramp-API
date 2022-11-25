@@ -27,7 +27,6 @@ module.exports = [{
         handler: async (request, h) => {
             let receipt;
             try {
-
                 switch (request.payload.cryptoCurrencyName) {
                     case 'ETH':
                         receipt = await ethTransaction(request.payload.walletAddress, request.payload.cryptoUnitCount);
@@ -38,6 +37,7 @@ module.exports = [{
                     default:
                         return h.response("Currency not supported, please try ETH or BNB").code(404);
                 }
+                if (receipt === false) return h.response("Wallet is not valid, please insert a valid ETH or BNB wallet").code(404);
 
                 const rampOrder = new RampOrder({
                     date: Date.now(),
@@ -74,7 +74,7 @@ module.exports = [{
                     .required()
                     .description('ammount of currency to send.'),
                 cryptoCurrencyName: Joi.string()
-                    .valid('ETH','BNB')
+                    .valid('ETH', 'BNB')
                     .required()
                     .description('Currency name. Accepted currencies are ETH and BNB'),
             })
@@ -90,7 +90,8 @@ module.exports = [{
                      transactionHash: Joi.string()
                  }),*/
                 200: Joi.any(),
-                500: Joi.any()
+                500: Joi.any(),
+                404: Joi.any()
             }
         }
 
