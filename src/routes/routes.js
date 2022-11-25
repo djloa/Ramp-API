@@ -15,7 +15,7 @@ module.exports = [{
     method: 'GET',
     path: '/',
     handler: (request, h) => {
-        return "<h1> Hello World!</h1>";
+        return "<h1> Ramp-Api</h1>";
     }
 },
 {
@@ -35,9 +35,9 @@ module.exports = [{
                         receipt = await bnbTransaction(request.payload.walletAddress, request.payload.cryptoUnitCount);
                         break;
                     default:
-                        return h.response("Currency not supported, please try ETH or BNB").code(404);
+                        return h.response("Currency not supported, please try ETH or BNB").code(400);
                 }
-                if (receipt === false) return h.response("Wallet is not valid, please insert a valid ETH or BNB wallet").code(404);
+                if (receipt === false) return h.response("Wallet is not valid, please insert a valid ETH or BNB wallet").code(400);
 
                 const rampOrder = new RampOrder({
                     date: Date.now(),
@@ -90,7 +90,7 @@ module.exports = [{
                      transactionHash: Joi.any()
                  }),
                 500: Joi.any(),
-                404: Joi.any().description("Response when wallet or currency name is not valid")
+                400: Joi.any().description("Response when wallet or currency name is not valid")
             }
         }
 
