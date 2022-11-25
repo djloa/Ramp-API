@@ -18,20 +18,17 @@ module.exports = async function (address, amount) {
     web3.eth.accounts.wallet.add(signer);
 
     // Estimatic the gas limit
-    var limit = web3.eth.estimateGas({
+    var gasLimit = web3.eth.estimateGas({
         from: signer.address,
-        to: address,
-        value: web3.utils.toWei("0.001")
+        to: address
     }).then(console.log);
-
-    console.log('limit: ' + limit);
 
     // Creating the transaction object
     const tx = {
         from: signer.address,
         to: address,
         value: web3.utils.numberToHex(web3.utils.toWei(amount.toString(), 'ether')),
-        gas: web3.utils.toHex(limit),
+        gasLimit: web3.utils.toHex(gasLimit),
         nonce: web3.eth.getTransactionCount(signer.address),
         maxPriorityFeePerGas: web3.utils.toHex(web3.utils.toWei('2', 'gwei')),
         chainId: 5,

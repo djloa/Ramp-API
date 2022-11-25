@@ -11,7 +11,7 @@ const Pack = require('./package');
 
 const init = async () => {
     const server = Hapi.Server({
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 3000
     });
 

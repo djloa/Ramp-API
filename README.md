@@ -10,3 +10,9 @@ Documentation on how to use the provided endpoints is on `/documentation#/` endp
 
 #### Quotes Endpoint
 ![](quotes.png)
+
+#### Order Endpoint
+![](orderEndpoint.png)
+
+#### Analytics Endpoint
+![](analytics.png)

@@ -5,7 +5,6 @@
 const bnbTransaction = require('../service/bnbTransactionService')
 const ethTransaction = require('../service/ethTransactionService')
 const getQuotes = require('../service/quoteService')
-require('dotenv').config()
 const Joi = require('joi');
 
 
@@ -48,9 +47,7 @@ module.exports = [{
                     status: receipt.status
 
                 });
-                console.log("saving" + rampOrder)
                 const rampSaved = await rampOrder.save();
-                console.log("saved")
                 const result = {
                     success: receipt.status.toString(),
                     amount: rampSaved.amount.toString(),
@@ -66,16 +63,16 @@ module.exports = [{
             }
 
         },
-        notes: 'Returns data from the order if the transaction succeeds',
+        notes: 'Returns data from the order if the transaction succeeds. WARNING: Since this is a test wallet, ammount is limited to 0.01 on both coins!',
         tags: ['api'], // ADD THIS TAG
         validate: {
             payload: Joi.object({
                 walletAddress: Joi.string()
                     .required()
                     .description('wallet that will receive the funds'),
-                cryptoUnitCount: Joi.number()
+                cryptoUnitCount: Joi.number().max(0.01)
                     .required()
-                    .description('ammount of currency to send'),
+                    .description('ammount of currency to send.'),
                 cryptoCurrencyName: Joi.string()
                     .required()
                     .description('Currency name. Accepted currencies are ETH and BNB'),

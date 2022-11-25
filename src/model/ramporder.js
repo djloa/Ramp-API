@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/ramp?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.6.0');
+const fs = require("fs")
+mongoose.connect(process.env.DB_HOST);
 
 var RampOrderSchema = mongoose.Schema({
     date: Date,
