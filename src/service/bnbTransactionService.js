@@ -15,7 +15,7 @@ module.exports = async function (address, amount) {
     const bnbContractAdress = "0x242a1ff6ee06f2131b7924cacb74c7f9e3a5edc9";
 
     const contract = new web3.eth.Contract(abiJson, bnbContractAdress)
-    let sender = "0xfFc53ba77AA5FD6bA432Ae10f0b50d196fB89559"
+    let sender = "0xF7508d044d21169927dE87aa358E79b9E17561c9"
     let receiver = address;
     let senderkey = Buffer.from(process.env.SENDER_PRIVATE_KEY, "hex")
 
@@ -29,7 +29,7 @@ module.exports = async function (address, amount) {
         "from": sender,
         "gasPrice": web3.utils.toHex(parseInt(Math.pow(10, 9) * 12)), //5 gwei
         "gasLimit": web3.utils.toHex(50000), //500,000 gas limit
-        "to": receiver, //receiver wallet address
+        "to": receiver, //wallet address
         "value": web3.utils.toHex(web3.utils.toHex(bnbAmount)),
         "data": data.encodeABI(), //our transfer data from contract instance
         "nonce": web3.utils.toHex(nonce)
