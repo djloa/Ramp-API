@@ -29,7 +29,7 @@ module.exports = async function (address, amount) {
         "from": sender,
         "gasPrice": web3.utils.toHex(parseInt(Math.pow(10, 9) * 12)), //5 gwei
         "gasLimit": web3.utils.toHex(50000), //500,000 gas limit
-        "to": receiver, //interacting with bnb contract
+        "to": receiver, //receiver wallet address
         "value": web3.utils.toHex(web3.utils.toHex(bnbAmount)),
         "data": data.encodeABI(), //our transfer data from contract instance
         "nonce": web3.utils.toHex(nonce)
